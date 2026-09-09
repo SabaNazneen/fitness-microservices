@@ -2,10 +2,8 @@ spring:
   application:
     name: aiservice
 
-  data:
-    mongodb:
-      uri: mongodb://localhost:27017/airecommendationfitness
-      database: airecommendationfitness
+  mongodb:
+    uri: mongodb://localhost:27017/airecommendationfitness
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
@@ -16,6 +14,10 @@ spring:
         spring.json.use.type.headers: false
         spring.json.value.default.type: com.fitness.aiservice.model.Activity
         spring.json.trusted.packages: "*"
+
+gemini:
+  url: ${GEMINI_URL}
+  api-key: ${GEMINI_KEY}
 
 
 eureka:
