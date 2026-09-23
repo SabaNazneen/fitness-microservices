@@ -17,15 +17,11 @@ import java.util.List;
 @RequestMapping("/api/recommendations")
 public class RecommendationController {
     private final RecommendationService recommendationService;
-
-
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Recommendation>>getUserRecommendation(@PathVariable String userId)
     {
         return ResponseEntity.ok((recommendationService.getUserRecommendation(userId)));
     }
-
-
     @GetMapping("/activity/{activityId}")
     public ResponseEntity<Recommendation>getActivityRecommendation(@PathVariable String activityId)
     {
