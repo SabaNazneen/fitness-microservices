@@ -16,7 +16,15 @@ public class UserService {
     public UserResponse register(RegisterRequest request) {
 
         if(userRepository.existsByEmail(request.getEmail())){
-            throw new RuntimeException("Email already exists");
+            User existingUser = userRepository.findByEmail(request.getEmail());
+            UserResponse userResponse = new UserResponse();
+            userResponse.setId(existingUser.getId());
+            userResponse.setEmail(existingUser.getEmail());
+            userResponse.setFirstname(existingUser.getFirstname());
+            userResponse.setLastname(existingUser.getLastname());
+            userResponse.setPassword(existingUser.getPassword());
+            userResponse.setCreatedAt(existingUser.getCreatedAt());
+            userResponse.setUpdatedAt(existingUser.getUpdatedAt());
         }
         User user = new User();
         user.setEmail(request.getEmail());
@@ -42,7 +50,6 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         UserResponse userResponse = new UserResponse();
-
         userResponse.setId(savedUser.getId());
         userResponse.setEmail(savedUser.getEmail());
         userResponse.setFirstname(savedUser.getFirstname());
@@ -56,6 +63,6 @@ public class UserService {
 
     public Boolean existByUserId(String userId) {
         log.info("Calling User Service for{}", userId);
-        return userRepository.existsById(userId);
+        return userRepository.existsByKeyCloakId(userId);
     }
 }
