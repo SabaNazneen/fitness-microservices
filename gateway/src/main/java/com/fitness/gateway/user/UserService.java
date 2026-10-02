@@ -16,11 +16,11 @@ public class UserService {
     public Mono<Boolean> validateUser(String userId)
     {
         log.info("Calling User Service for{}", userId);
-        try {
             return userServiceWebClient.get()
                     .uri("/api/users/{userId}/validate", userId)
                     .retrieve()
                     .bodyToMono(Boolean.class)
+
                     .onErrorResume(WebClientResponseException.class, ex -> {
                         if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
                             return Mono.error(
@@ -32,11 +32,29 @@ public class UserService {
                             );
                         }
 
+
                         return Mono.error(ex);
                     });
-        }catch(WebClientResponseException e){
-            e.printStackTrace();
-        }
-        return false;
+
+    }
+
+    public Mono<UserResponse> registerUser(RegisterRequest registerRequest) {
+        log.info("Calling User Registration for{}",registerRequest.getEmail());
+        return userServiceWebClient.post()
+                .uri("/api/users/register")
+                .bodyValue(registerRequest)
+                .retrieve()
+
+                .bodyToMono(UserResponse.class)
+                .onErrorResume(WebClientResponseException.class, ex -> {
+                     if (ex.getStatusCode() == HttpStatus.BAD_REQUEST) {
+                        return Mono.error(
+                                new RuntimeException("Bad request for user: " + ex.getMessage())
+                        );
+                    }
+
+
+                    return Mono.error(ex);
+                });
     }
 }

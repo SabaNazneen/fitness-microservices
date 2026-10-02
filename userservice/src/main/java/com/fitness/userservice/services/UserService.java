@@ -28,6 +28,7 @@ public class UserService {
         }
         User user = new User();
         user.setEmail(request.getEmail());
+        user.setKeyCloakId(request.getKeycloakID());
         user.setPassword(request.getPassword());
         user.setFirstname(request.getFirstname());
         user.setLastname(request.getLastname());
@@ -36,6 +37,7 @@ public class UserService {
         UserResponse userResponse = new UserResponse();
         userResponse.setId(savedUser.getId());
         userResponse.setEmail(savedUser.getEmail());
+        userResponse.setKeyCloakId(savedUser.getKeyCloakId());
         userResponse.setFirstname(savedUser.getFirstname());
         userResponse.setLastname(savedUser.getLastname());
         userResponse.setPassword(savedUser.getPassword());
@@ -62,7 +64,12 @@ public class UserService {
     }
 
     public Boolean existByUserId(String userId) {
-        log.info("Calling User Service for{}", userId);
-        return userRepository.existsByKeyCloakId(userId);
+        log.info("Calling User Service for {}", userId);
+
+        Boolean exists = userRepository.existsByKeyCloakId(userId);
+
+        log.info("USER EXISTS RESULT for {} = {}", userId, exists);
+
+        return exists;
     }
 }
