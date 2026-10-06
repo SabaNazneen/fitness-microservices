@@ -7,7 +7,7 @@ export const authConfig = {
   tokenEndpoint:
     'http://127.0.0.1:8181/realms/fitness-app/protocol/openid-connect/token',
 
-  redirectUri: 'http://localhost:5174/',
+  redirectUri: 'http://localhost:5173/',
 
   scope: 'openid profile email offline_access',
 
