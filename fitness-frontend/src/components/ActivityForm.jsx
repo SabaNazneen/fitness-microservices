@@ -3,16 +3,31 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { duration, TextField } from '@mui/material';
+import { Button, duration, TextField } from '@mui/material';
 import React, { useState } from 'react';
-const ActivityForm = () => {
+import { addActivity } from '../services/api';
+const ActivityForm = ({onActivityAdded}) => {
   const [activity,setActivity] = useState({
     type: "RUNNING", duration: '',caloriesBurned: '',
     additionalMetrics:{}
   });
 
+  const handleSubmit = async(e)=>{
+    e.preventDefault();
+    try{
+      await addActivity(activity);
+      onActivityAdded();
+      setActivity({
+        type:"RUNNING",duration: '',caloriesBurned:'',
+        additionalMetrics:{}
+      })
+    }catch(error){
+      console.error(error);
+    }
+  }
+
   return (
-    <Box component="form" sx={{ mb: 2 }}>
+    <Box component="form" sx={{ mb: 2 }} onSubmit={handleSubmit}>
       <Box sx={{ minWidth: 120 }}>
         <FormControl fullWidth sx={{mb:2}}>
           <InputLabel >Activity Type</InputLabel>
@@ -25,13 +40,24 @@ onChange={(e) => {setActivity({...activity,type:e.target.value})}}          >
           </Select>
         </FormControl>
       </Box>
+     
+      <TextField fullWidth
+      label="Duration"
+      type='number'
+      sx={{mb:2}}
+      value={activity.durattion}
+      onChange={(e)=>{setActivity({...activity,duration:e.target.value})}}
+      />
       <TextField fullWidth
       label="Calories Burned"
       type='number'
       sx={{mb:2}}
       value={activity.caloriesBurned}
-      onChange={(e)=>{setActivity({...activity,duration:e.target.value})}}
+      onChange={(e)=>{setActivity({...activity,caloriesBurned:e.target.value})}}
       />
+      <Button type='submit' variant='contained'>
+        Add Activity
+      </Button>
     </Box>
   );
 };
