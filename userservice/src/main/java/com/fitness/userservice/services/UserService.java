@@ -15,25 +15,35 @@ public class UserService {
     private final UserRepository userRepository;
     public UserResponse register(RegisterRequest request) {
 
-        if(userRepository.existsByEmail(request.getEmail())){
+        if (userRepository.existsByEmail(request.getEmail())) {
             User existingUser = userRepository.findByEmail(request.getEmail());
+
+            existingUser.setKeyCloakId(request.getKeycloakId());
+
+            User savedUser = userRepository.save(existingUser);
+
             UserResponse userResponse = new UserResponse();
-            userResponse.setId(existingUser.getId());
-            userResponse.setEmail(existingUser.getEmail());
-            userResponse.setFirstname(existingUser.getFirstname());
-            userResponse.setLastname(existingUser.getLastname());
-            userResponse.setPassword(existingUser.getPassword());
-            userResponse.setCreatedAt(existingUser.getCreatedAt());
-            userResponse.setUpdatedAt(existingUser.getUpdatedAt());
+            userResponse.setId(savedUser.getId());
+            userResponse.setEmail(savedUser.getEmail());
+            userResponse.setKeyCloakId(savedUser.getKeyCloakId());
+            userResponse.setFirstname(savedUser.getFirstname());
+            userResponse.setLastname(savedUser.getLastname());
+            userResponse.setPassword(savedUser.getPassword());
+            userResponse.setCreatedAt(savedUser.getCreatedAt());
+            userResponse.setUpdatedAt(savedUser.getUpdatedAt());
+
+            return userResponse;
         }
+
         User user = new User();
         user.setEmail(request.getEmail());
-        user.setKeyCloakId(request.getKeycloakID());
+        user.setKeyCloakId(request.getKeycloakId());
         user.setPassword(request.getPassword());
         user.setFirstname(request.getFirstname());
         user.setLastname(request.getLastname());
 
         User savedUser = userRepository.save(user);
+
         UserResponse userResponse = new UserResponse();
         userResponse.setId(savedUser.getId());
         userResponse.setEmail(savedUser.getEmail());
@@ -43,6 +53,7 @@ public class UserService {
         userResponse.setPassword(savedUser.getPassword());
         userResponse.setCreatedAt(savedUser.getCreatedAt());
         userResponse.setUpdatedAt(savedUser.getUpdatedAt());
+
         return userResponse;
     }
 

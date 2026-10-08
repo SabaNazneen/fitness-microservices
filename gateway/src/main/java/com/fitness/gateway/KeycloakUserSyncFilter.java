@@ -94,6 +94,7 @@ public class KeycloakUserSyncFilter implements WebFilter {
             RegisterRequest request =  new  RegisterRequest();
             request.setEmail(claims.getStringClaim("email"));
             request.setKeycloakId(claims.getStringClaim("sub"));
+            log.info("Keycloak ID from token: {}", request.getKeycloakId());
             request.setFirstname(claims.getStringClaim("given_name"));
             request.setLastname(claims.getStringClaim("family_name"));
             request.setPassword("dummy@123123");
